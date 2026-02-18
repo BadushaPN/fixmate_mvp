@@ -4,6 +4,7 @@ import '../providers/app_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_reveal.dart';
 import 'home_screen.dart';
+import 'profile_name_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -44,11 +45,19 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
     setState(() => _isLoading = true);
-    final ok = await Provider.of<AppProvider>(context, listen: false).login(_phoneController.text);
+    final app = Provider.of<AppProvider>(context, listen: false);
+    final ok = await app.login(_phoneController.text);
     if (!mounted) return;
     setState(() => _isLoading = false);
     if (ok) {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+      final name = app.currentUser?.name.trim() ?? '';
+      final needsName = name.isEmpty || name.startsWith('User ');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => needsName ? const ProfileNameScreen() : const HomeScreen(),
+        ),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Login failed')));
     }

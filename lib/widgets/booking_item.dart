@@ -90,8 +90,38 @@ class BookingItem extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Price: INR ${booking.price.toStringAsFixed(0)}',
+            booking.addressLine,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
+              color: AppColors.subtextFor(context),
+              fontSize: 12,
+            ),
+          ),
+          const SizedBox(height: 8),
+          if (booking.imagePaths.isNotEmpty)
+            Row(
+              children: [
+                Icon(
+                  Icons.photo_library_rounded,
+                  size: 15,
+                  color: AppColors.subtextFor(context),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  '${booking.imagePaths.length} image(s) attached',
+                  style: TextStyle(
+                    color: AppColors.subtextFor(context),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          if (booking.imagePaths.isNotEmpty) const SizedBox(height: 8),
+          Text(
+            'Price: INR ${booking.price.toStringAsFixed(0)}',
+            style: const TextStyle(
               fontWeight: FontWeight.w700,
               color: AppColors.ink,
             ),

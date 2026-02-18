@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/address_model.dart';
 import '../models/booking_model.dart';
 import '../models/service_model.dart';
 import '../models/user_model.dart';
@@ -8,6 +9,7 @@ class StorageService {
   static const String _bookingsKey = 'bookings';
   static const String _userKey = 'current_user';
   static const String _themeModeKey = 'theme_mode';
+  static const String _addressesPrefix = 'addresses_';
 
   // Mock Data
   final List<ServiceModel> _services = [
@@ -76,6 +78,10 @@ class StorageService {
     await prefs.setString(_userKey, jsonEncode(user.toJson()));
   }
 
+  Future<void> saveCurrentUser(UserModel user) async {
+    await _saveUser(user);
+  }
+
   Future<UserModel?> getCurrentUser() async {
     final prefs = await SharedPreferences.getInstance();
     final String? userString = prefs.getString(_userKey);
@@ -86,6 +92,39 @@ class StorageService {
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_userKey);
+  }
+
+  Future<List<AddressModel>> getUserAddresses(String userId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('$_addressesPrefix$userId');
+    if (raw == null) return [];
+    final decoded = (jsonDecode(raw) as List<dynamic>)
+        .map((e) => AddressModel.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+    return decoded;
+  }
+
+  Future<void> saveUserAddress(String userId, AddressModel address) async {
+    final prefs = await SharedPreferences.getInstance();
+    final current = await getUserAddresses(userId);
+    final idx = current.indexWhere((a) => a.id == address.id);
+    if (idx == -1) {
+      current.add(address);
+    } else {
+      current[idx] = address;
+    }
+    await prefs.setString(
+      '$_addressesPrefix$userId',
+      jsonEncode(current.map((a) => a.toJson()).toList()),
+    );
+  }
+
+  Future<void> saveAllUserAddresses(String userId, List<AddressModel> addresses) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      '$_addressesPrefix$userId',
+      jsonEncode(addresses.map((a) => a.toJson()).toList()),
+    );
   }
 
   Future<String?> getThemeMode() async {

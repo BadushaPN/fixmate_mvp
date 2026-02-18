@@ -8,6 +8,10 @@ class BookingModel {
   final String status; // pending, confirmed, completed, cancelled
   final double price;
   final DateTime createdAt;
+  final String addressLine;
+  final String? receiverName;
+  final String? receiverPhone;
+  final List<String> imagePaths;
 
   BookingModel({
     required this.id,
@@ -19,6 +23,10 @@ class BookingModel {
     required this.status,
     required this.price,
     required this.createdAt,
+    required this.addressLine,
+    this.receiverName,
+    this.receiverPhone,
+    this.imagePaths = const [],
   });
 
   Map<String, dynamic> toJson() {
@@ -32,6 +40,10 @@ class BookingModel {
       'status': status,
       'price': price,
       'createdAt': createdAt.toIso8601String(),
+      'addressLine': addressLine,
+      'receiverName': receiverName,
+      'receiverPhone': receiverPhone,
+      'imagePaths': imagePaths,
     };
   }
 
@@ -46,6 +58,13 @@ class BookingModel {
       status: json['status'],
       price: json['price'],
       createdAt: DateTime.parse(json['createdAt']),
+      addressLine: json['addressLine'] ?? 'Address unavailable',
+      receiverName: json['receiverName'],
+      receiverPhone: json['receiverPhone'],
+      imagePaths: (json['imagePaths'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
     );
   }
 }

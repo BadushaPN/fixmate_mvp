@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Fixmate needs your location to show and book services at your current address.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Fixmate uses camera to attach booking reference photos.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Fixmate uses photo library to attach booking reference photos.</string>
 </dict>
 </plist>

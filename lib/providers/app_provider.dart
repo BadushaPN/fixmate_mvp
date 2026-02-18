@@ -2,6 +2,7 @@ import '../services/storage_service.dart';
 import '../models/user_model.dart';
 import '../models/booking_model.dart';
 import '../models/service_model.dart';
+import '../models/address_model.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 
@@ -10,12 +11,21 @@ class AppProvider with ChangeNotifier {
   UserModel? _currentUser;
   List<BookingModel> _bookings = [];
   List<ServiceModel> _services = [];
+  List<AddressModel> _addresses = [];
   bool _isLoading = false;
   ThemeMode _themeMode = ThemeMode.system;
 
   UserModel? get currentUser => _currentUser;
   List<BookingModel> get bookings => _bookings;
   List<ServiceModel> get services => _services;
+  List<AddressModel> get addresses => _addresses;
+  AddressModel? get currentLocationAddress {
+    try {
+      return _addresses.firstWhere((a) => a.isCurrentLocation);
+    } catch (_) {
+      return null;
+    }
+  }
   bool get isLoading => _isLoading;
   ThemeMode get themeMode => _themeMode;
 
@@ -24,6 +34,7 @@ class AppProvider with ChangeNotifier {
     _currentUser = await _storage.getCurrentUser();
     if (_currentUser != null) {
       await fetchBookings();
+      await loadAddresses();
     }
     _services = await _storage.getServices(); // Get mock services
     final mode = await _storage.getThemeMode();
@@ -36,6 +47,7 @@ class AppProvider with ChangeNotifier {
     try {
       _currentUser = await _storage.login(phoneNumber);
       await fetchBookings();
+      await loadAddresses();
       _setLoading(false);
       return true;
     } catch (e) {
@@ -48,6 +60,7 @@ class AppProvider with ChangeNotifier {
     await _storage.logout();
     _currentUser = null;
     _bookings = [];
+    _addresses = [];
     notifyListeners();
   }
 
@@ -62,6 +75,10 @@ class AppProvider with ChangeNotifier {
     required DateTime date,
     required String timeSlot,
     required double price,
+    required String addressLine,
+    String? receiverName,
+    String? receiverPhone,
+    List<String> imagePaths = const [],
   }) async {
     if (_currentUser == null) return;
 
@@ -75,6 +92,10 @@ class AppProvider with ChangeNotifier {
       status: 'pending',
       price: price,
       createdAt: DateTime.now(),
+      addressLine: addressLine,
+      receiverName: receiverName,
+      receiverPhone: receiverPhone,
+      imagePaths: imagePaths,
     );
 
     await _storage.createBooking(booking);
@@ -84,6 +105,47 @@ class AppProvider with ChangeNotifier {
 
   void _setLoading(bool value) {
     _isLoading = value;
+    notifyListeners();
+  }
+
+  Future<void> loadAddresses() async {
+    if (_currentUser == null) return;
+    _addresses = await _storage.getUserAddresses(_currentUser!.id);
+    notifyListeners();
+  }
+
+  Future<void> saveAddress(AddressModel address) async {
+    if (_currentUser == null) return;
+    await _storage.saveUserAddress(_currentUser!.id, address);
+    await loadAddresses();
+  }
+
+  Future<void> updateProfileName(String name) async {
+    if (_currentUser == null) return;
+    _currentUser = UserModel(
+      id: _currentUser!.id,
+      phoneNumber: _currentUser!.phoneNumber,
+      name: name,
+    );
+    await _storage.saveCurrentUser(_currentUser!);
+    notifyListeners();
+  }
+
+  Future<void> setCurrentLocationAddress(String addressLine) async {
+    if (_currentUser == null) return;
+    final current = List<AddressModel>.from(_addresses);
+    final filtered = current.where((a) => !a.isCurrentLocation).toList();
+    filtered.insert(
+      0,
+      AddressModel(
+        id: 'current_location',
+        label: 'Current Location',
+        addressLine: addressLine,
+        isCurrentLocation: true,
+      ),
+    );
+    _addresses = filtered;
+    await _storage.saveAllUserAddresses(_currentUser!.id, filtered);
     notifyListeners();
   }
 

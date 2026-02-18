@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,11 +29,17 @@ class _HomeScreenState extends State<HomeScreen> {
   static const _areas = ['Perungudi', 'OMR', 'Velachery', 'Adyar', 'Thoraipakkam'];
   int _index = 0;
   String _locality = 'Perungudi';
+  bool _locationReady = false;
+  bool _locationBlocked = false;
+  String _locationMessage = 'Checking location permission...';
 
   @override
   void initState() {
     super.initState();
     _loadLocality();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _enforceLocation();
+    });
   }
 
   Future<void> _loadLocality() async {
@@ -71,8 +79,134 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _locality = picked);
   }
 
+  Future<void> _enforceLocation() async {
+    if (!mounted) return;
+    final provider = Provider.of<AppProvider>(context, listen: false);
+
+    setState(() {
+      _locationMessage = 'Checking location permission...';
+      _locationBlocked = false;
+    });
+
+    try {
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        await Geolocator.openLocationSettings();
+        if (!mounted) return;
+        setState(() {
+          _locationBlocked = true;
+          _locationReady = false;
+          _locationMessage = 'Location service is off. Please enable it in settings.';
+        });
+        return;
+      }
+
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        await Geolocator.openAppSettings();
+        await Geolocator.openLocationSettings();
+        if (!mounted) return;
+        setState(() {
+          _locationBlocked = true;
+          _locationReady = false;
+          _locationMessage = 'Location permission is mandatory to use this app.';
+        });
+        return;
+      }
+
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      ).timeout(const Duration(seconds: 15));
+
+      String formatted = 'Lat ${position.latitude}, Lng ${position.longitude}';
+      String? locality;
+      try {
+        final places = await placemarkFromCoordinates(
+          position.latitude,
+          position.longitude,
+        );
+        if (places.isNotEmpty) {
+          final place = places.first;
+          locality = place.locality;
+          formatted = [
+            place.name,
+            place.subLocality,
+            place.locality,
+            place.administrativeArea,
+          ].where((e) => e != null && e.trim().isNotEmpty).join(', ');
+        }
+      } catch (_) {
+        // Keep coordinates fallback if reverse-geocoding fails.
+      }
+
+      await provider.setCurrentLocationAddress(formatted);
+
+      if (!mounted) return;
+      setState(() {
+        _locationReady = true;
+        _locationBlocked = false;
+        if (locality != null && locality.trim().isNotEmpty) {
+          _locality = locality.trim();
+        }
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _locationBlocked = true;
+        _locationReady = false;
+        _locationMessage = 'Unable to access location on this device. Open settings and retry.';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (!_locationReady) {
+      return Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.location_on_rounded, size: 56, color: AppColors.primary),
+                  const SizedBox(height: 14),
+                  Text(
+                    'Location Access Required',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _locationMessage,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppColors.subtextFor(context)),
+                  ),
+                  const SizedBox(height: 14),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _enforceLocation,
+                      child: Text(_locationBlocked ? 'Open Settings / Retry' : 'Continue'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     final tabs = [
       _HomeTab(
         locality: _locality,
