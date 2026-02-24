@@ -13,7 +13,6 @@ class AppProvider with ChangeNotifier {
   List<ServiceModel> _services = [];
   List<AddressModel> _addresses = [];
   bool _isLoading = false;
-  ThemeMode _themeMode = ThemeMode.system;
 
   UserModel? get currentUser => _currentUser;
   List<BookingModel> get bookings => _bookings;
@@ -26,8 +25,8 @@ class AppProvider with ChangeNotifier {
       return null;
     }
   }
+
   bool get isLoading => _isLoading;
-  ThemeMode get themeMode => _themeMode;
 
   Future<void> init() async {
     _setLoading(true);
@@ -37,8 +36,6 @@ class AppProvider with ChangeNotifier {
       await loadAddresses();
     }
     _services = await _storage.getServices(); // Get mock services
-    final mode = await _storage.getThemeMode();
-    _themeMode = _parseThemeMode(mode);
     _setLoading(false);
   }
 
@@ -70,7 +67,7 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createBooking({
+  Future<BookingModel?> createBooking({
     required ServiceModel service,
     required DateTime date,
     required String timeSlot,
@@ -80,7 +77,7 @@ class AppProvider with ChangeNotifier {
     String? receiverPhone,
     List<String> imagePaths = const [],
   }) async {
-    if (_currentUser == null) return;
+    if (_currentUser == null) return null;
 
     final booking = BookingModel(
       id: const Uuid().v4(),
@@ -101,6 +98,7 @@ class AppProvider with ChangeNotifier {
     await _storage.createBooking(booking);
     _bookings.insert(0, booking); // Add to local list immediately
     notifyListeners();
+    return booking;
   }
 
   void _setLoading(bool value) {
@@ -149,31 +147,4 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setThemeMode(ThemeMode mode) async {
-    _themeMode = mode;
-    await _storage.saveThemeMode(_themeModeToString(mode));
-    notifyListeners();
-  }
-
-  ThemeMode _parseThemeMode(String? value) {
-    switch (value) {
-      case 'light':
-        return ThemeMode.light;
-      case 'dark':
-        return ThemeMode.dark;
-      default:
-        return ThemeMode.system;
-    }
-  }
-
-  String _themeModeToString(ThemeMode mode) {
-    switch (mode) {
-      case ThemeMode.light:
-        return 'light';
-      case ThemeMode.dark:
-        return 'dark';
-      case ThemeMode.system:
-        return 'system';
-    }
-  }
 }

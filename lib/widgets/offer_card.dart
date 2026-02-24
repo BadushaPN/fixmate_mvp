@@ -27,11 +27,11 @@ class OfferCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppRadii.md),
         gradient: LinearGradient(
-          colors: [color.withValues(alpha: 0.16), Colors.white],
+          colors: [color.withValues(alpha: 0.10), AppColors.cardFor(context)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        border: Border.all(color: color.withValues(alpha: 0.38)),
+        border: Border.all(color: AppColors.strokeFor(context)),
         boxShadow: AppShadows.card(context),
       ),
       child: Material(
@@ -83,6 +83,7 @@ class OfferCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: AppColors.deep,
                       borderRadius: BorderRadius.circular(AppRadii.md),
+                      border: Border.all(color: AppColors.strokeFor(context)),
                     ),
                     child: Text(
                       buttonText,

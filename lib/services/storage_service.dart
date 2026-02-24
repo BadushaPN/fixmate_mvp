@@ -8,7 +8,6 @@ import '../models/user_model.dart';
 class StorageService {
   static const String _bookingsKey = 'bookings';
   static const String _userKey = 'current_user';
-  static const String _themeModeKey = 'theme_mode';
   static const String _addressesPrefix = 'addresses_';
 
   // Mock Data
@@ -127,13 +126,4 @@ class StorageService {
     );
   }
 
-  Future<String?> getThemeMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_themeModeKey);
-  }
-
-  Future<void> saveThemeMode(String mode) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_themeModeKey, mode);
-  }
 }

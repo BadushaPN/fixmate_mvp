@@ -27,8 +27,6 @@ class FixmateApp extends StatelessWidget {
         title: 'Fixmate',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light(context),
-        darkTheme: AppTheme.dark(context),
-        themeMode: app.themeMode,
         onGenerateRoute: (settings) {
           if (settings.name == Navigator.defaultRouteName) {
             return PageRouteBuilder(

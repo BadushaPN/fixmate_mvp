@@ -39,22 +39,22 @@ class _ServiceCardState extends State<ServiceCard> {
 
   Color _surfaceColor(String name) {
     final colors = [
-      const Color(0xFFE8F1FF),
-      const Color(0xFFE6F7FF),
-      const Color(0xFFFDEED9),
-      const Color(0xFFEAF8EA),
-      const Color(0xFFF7EBFF),
+      const Color(0xFFEDF3FC),
+      const Color(0xFFEAF4F2),
+      const Color(0xFFFAF2EA),
+      const Color(0xFFF1F6EF),
+      const Color(0xFFF3F0F8),
     ];
     return colors[name.length % colors.length];
   }
 
   Color _accentColor(String name) {
     final colors = [
-      const Color(0xFF246BFD),
-      const Color(0xFF1789B9),
-      const Color(0xFFDA8B23),
-      const Color(0xFF1C8E56),
-      const Color(0xFF7A45CF),
+      const Color(0xFF2F5FA8),
+      const Color(0xFF3E7A95),
+      const Color(0xFFB07A3A),
+      const Color(0xFF4A8663),
+      const Color(0xFF766099),
     ];
     return colors[name.length % colors.length];
   }
@@ -74,7 +74,7 @@ class _ServiceCardState extends State<ServiceCard> {
     final card = Container(
       margin: const EdgeInsets.only(bottom: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardFor(context),
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: AppColors.strokeFor(context)),
         boxShadow: [

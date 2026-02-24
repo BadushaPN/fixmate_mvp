@@ -26,7 +26,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   static const _localityKey = 'selected_locality';
-  static const _areas = ['Perungudi', 'OMR', 'Velachery', 'Adyar', 'Thoraipakkam'];
+  static const _areas = [
+    'Perungudi',
+    'OMR',
+    'Velachery',
+    'Adyar',
+    'Thoraipakkam',
+  ];
   int _index = 0;
   String _locality = 'Perungudi';
   bool _locationReady = false;
@@ -96,7 +102,8 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _locationBlocked = true;
           _locationReady = false;
-          _locationMessage = 'Location service is off. Please enable it in settings.';
+          _locationMessage =
+              'Location service is off. Please enable it in settings.';
         });
         return;
       }
@@ -114,7 +121,8 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _locationBlocked = true;
           _locationReady = false;
-          _locationMessage = 'Location permission is mandatory to use this app.';
+          _locationMessage =
+              'Location permission is mandatory to use this app.';
         });
         return;
       }
@@ -161,7 +169,8 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         _locationBlocked = true;
         _locationReady = false;
-        _locationMessage = 'Unable to access location on this device. Open settings and retry.';
+        _locationMessage =
+            'Unable to access location on this device. Open settings and retry.';
       });
     }
   }
@@ -177,7 +186,11 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.location_on_rounded, size: 56, color: AppColors.primary),
+                  const Icon(
+                    Icons.location_on_rounded,
+                    size: 56,
+                    color: AppColors.primary,
+                  ),
                   const SizedBox(height: 14),
                   Text(
                     'Location Access Required',
@@ -196,7 +209,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: _enforceLocation,
-                      child: Text(_locationBlocked ? 'Open Settings / Retry' : 'Continue'),
+                      child: Text(
+                        _locationBlocked ? 'Open Settings / Retry' : 'Continue',
+                      ),
                     ),
                   ),
                 ],
@@ -216,7 +231,9 @@ class _HomeScreenState extends State<HomeScreen> {
       const _ServicesTab(),
       _BookingsTab(onOpenServices: () => setState(() => _index = 1)),
       const _SupportTab(),
-      _ProfileTab(onLocalityChanged: (value) => setState(() => _locality = value)),
+      _ProfileTab(
+        onLocalityChanged: (value) => setState(() => _locality = value),
+      ),
     ];
     return Container(
       decoration: BoxDecoration(gradient: AppGradients.backgroundFor(context)),
@@ -253,8 +270,9 @@ class _BottomBar extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardFor(context),
         borderRadius: BorderRadius.circular(AppRadii.md),
+        border: Border.all(color: AppColors.strokeFor(context)),
         boxShadow: AppShadows.card(context),
       ),
       child: LayoutBuilder(
@@ -273,7 +291,7 @@ class _BottomBar extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(AppRadii.md),
                     gradient: const LinearGradient(
-                      colors: [AppColors.primary, AppColors.secondary],
+                      colors: [Color(0xFF3B6CB2), Color(0xFF5B948D)],
                     ),
                   ),
                 ),
@@ -297,7 +315,9 @@ class _BottomBar extends StatelessWidget {
                               child: Icon(
                                 items[i].$1,
                                 size: 22,
-                                color: active ? Colors.white : AppColors.subtextFor(context),
+                                color: active
+                                    ? Colors.white
+                                    : AppColors.subtextFor(context),
                               ),
                             ),
                             AnimatedOpacity(
@@ -308,7 +328,9 @@ class _BottomBar extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w700,
-                                  color: active ? Colors.white : AppColors.subtextFor(context),
+                                  color: active
+                                      ? Colors.white
+                                      : AppColors.subtextFor(context),
                                 ),
                               ),
                             ),
@@ -342,7 +364,8 @@ class _HomeTab extends StatefulWidget {
   State<_HomeTab> createState() => _HomeTabState();
 }
 
-class _HomeTabState extends State<_HomeTab> with SingleTickerProviderStateMixin {
+class _HomeTabState extends State<_HomeTab>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _parallax;
   bool _chipPop = false;
 
@@ -394,7 +417,9 @@ class _HomeTabState extends State<_HomeTab> with SingleTickerProviderStateMixin 
               const SizedBox(height: 12),
               AppReveal(
                 delayMs: 40,
-                child: _RecentStrip(bookings: provider.bookings.take(2).toList()),
+                child: _RecentStrip(
+                  bookings: provider.bookings.take(2).toList(),
+                ),
               ),
               const SizedBox(height: 12),
               AppReveal(
@@ -425,7 +450,10 @@ class _HomeTabState extends State<_HomeTab> with SingleTickerProviderStateMixin 
                 ),
               ),
               const SizedBox(height: 8),
-              const AppReveal(delayMs: 160, child: _SectionTitle(title: 'Offers')),
+              const AppReveal(
+                delayMs: 160,
+                child: _SectionTitle(title: 'Offers'),
+              ),
               const SizedBox(height: 8),
               AppReveal(
                 delayMs: 180,
@@ -465,9 +493,13 @@ class _HomeTabState extends State<_HomeTab> with SingleTickerProviderStateMixin 
       PageRouteBuilder(
         transitionDuration: AppMotion.maybe(AppMotion.normal, context),
         reverseTransitionDuration: AppMotion.maybe(AppMotion.normal, context),
-        pageBuilder: (routeContext, animation, secondaryAnimation) => BookingFormScreen(service: service),
+        pageBuilder: (routeContext, animation, secondaryAnimation) =>
+            BookingFormScreen(service: service),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          final curve = AppMotion.maybeCurve(AppMotion.standard(context), context);
+          final curve = AppMotion.maybeCurve(
+            AppMotion.standard(context),
+            context,
+          );
           final curved = CurvedAnimation(parent: animation, curve: curve);
           final slide = Tween<Offset>(
             begin: const Offset(0.12, 0),
@@ -508,7 +540,10 @@ class _Hero extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadii.md),
-            gradient: const LinearGradient(colors: [Color(0xFF0E5BFF), Color(0xFF17C7A5)]),
+            gradient: const LinearGradient(
+              colors: [Color(0xFF2D5DA8), Color(0xFF4F8D87)],
+            ),
+            border: Border.all(color: const Color(0xFF7195C6)),
             boxShadow: AppShadows.card(context),
           ),
           child: Stack(
@@ -532,20 +567,30 @@ class _Hero extends StatelessWidget {
                     children: [
                       AnimatedScale(
                         duration: AppMotion.maybe(AppMotion.fast, context),
-                        curve: AppMotion.maybeCurve(AppMotion.spring(context), context),
+                        curve: AppMotion.maybeCurve(
+                          AppMotion.spring(context),
+                          context,
+                        ),
                         scale: pop ? 1.05 : 1,
                         child: InkWell(
                           onTap: onTapLocality,
                           borderRadius: BorderRadius.circular(14),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(14),
                             ),
                             child: Row(
                               children: [
-                                Icon(Icons.location_on_rounded, size: 20, color: Colors.white),
+                                Icon(
+                                  Icons.location_on_rounded,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
                                 const SizedBox(width: 6),
                                 Text(
                                   locality,
@@ -555,20 +600,30 @@ class _Hero extends StatelessWidget {
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                                Icon(Icons.keyboard_arrow_down_rounded, size: 20, color: Colors.white),
+                                Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
                               ],
                             ),
                           ),
                         ),
                       ),
                       const Spacer(),
-                      Icon(Icons.notifications_none_rounded, size: 22, color: Colors.white),
+                      Icon(
+                        Icons.notifications_none_rounded,
+                        size: 22,
+                        color: Colors.white,
+                      ),
                     ],
                   ),
                   const SizedBox(height: 12),
                   Text(
                     'Welcome, $name',
-                    style: AppTheme.heroHeadline(context).copyWith(color: Colors.white),
+                    style: AppTheme.heroHeadline(
+                      context,
+                    ).copyWith(color: Colors.white),
                   ),
                   const SizedBox(height: 4),
                   const Text(
@@ -594,27 +649,43 @@ class _RecentStrip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardFor(context),
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: AppColors.strokeFor(context)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Recent bookings', style: TextStyle(fontWeight: FontWeight.w800)),
+          const Text(
+            'Recent bookings',
+            style: TextStyle(fontWeight: FontWeight.w800),
+          ),
           const SizedBox(height: 8),
           if (bookings.isEmpty)
-            Text('No recent bookings yet.', style: TextStyle(color: AppColors.subtextFor(context), fontSize: 12))
+            Text(
+              'No recent bookings yet.',
+              style: TextStyle(
+                color: AppColors.subtextFor(context),
+                fontSize: 12,
+              ),
+            )
           else
             ...bookings.map(
               (x) => Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Row(
                   children: [
-                    Icon(Icons.history_rounded, size: 20, color: AppColors.primary),
+                    Icon(
+                      Icons.history_rounded,
+                      size: 20,
+                      color: AppColors.primary,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text('${x.serviceName} • ${x.timeSlot}', overflow: TextOverflow.ellipsis),
+                      child: Text(
+                        '${x.serviceName} • ${x.timeSlot}',
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
@@ -639,7 +710,9 @@ class _SectionTitle extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
           ),
         ),
         if (action != null)
@@ -647,7 +720,10 @@ class _SectionTitle extends StatelessWidget {
             onTap: onTap,
             child: Text(
               action!,
-              style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w700),
+              style: TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
       ],
@@ -663,13 +739,17 @@ class _ServicesTab extends StatelessWidget {
     return SafeArea(
       child: Consumer<AppProvider>(
         builder: (context, p, _) {
-          if (p.isLoading) return const Center(child: CircularProgressIndicator());
+          if (p.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
           return ListView(
             padding: const EdgeInsets.fromLTRB(18, 14, 18, 18),
             children: [
               Text(
                 'Service List',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
               ),
               const SizedBox(height: 12),
               GridView.builder(
@@ -688,7 +768,10 @@ class _ServicesTab extends StatelessWidget {
                     service: p.services[i],
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => BookingFormScreen(service: p.services[i])),
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            BookingFormScreen(service: p.services[i]),
+                      ),
                     ),
                   ),
                 ),
@@ -717,14 +800,23 @@ class _BookingsTab extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.calendar_month_rounded, size: 44, color: AppColors.primary),
+                    Icon(
+                      Icons.calendar_month_rounded,
+                      size: 44,
+                      color: AppColors.primary,
+                    ),
                     const SizedBox(height: 10),
                     Text(
                       'No bookings yet',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                     const SizedBox(height: 6),
-                    const Text('Book your first service to start tracking here.', textAlign: TextAlign.center),
+                    const Text(
+                      'Book your first service to start tracking here.',
+                      textAlign: TextAlign.center,
+                    ),
                     const SizedBox(height: 12),
                     SizedBox(
                       width: double.infinity,
@@ -743,11 +835,16 @@ class _BookingsTab extends StatelessWidget {
             children: [
               Text(
                 'My Bookings',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
               ),
               const SizedBox(height: 12),
               ...p.bookings.asMap().entries.map(
-                (e) => AppReveal(delayMs: 30 * e.key, child: BookingItem(booking: e.value)),
+                (e) => AppReveal(
+                  delayMs: 30 * e.key,
+                  child: BookingItem(booking: e.value),
+                ),
               ),
             ],
           );
@@ -766,7 +863,9 @@ class _SupportTab extends StatelessWidget {
     if (ok) {
       HapticFeedback.lightImpact();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open this action')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open this action')),
+      );
     }
   }
 
@@ -778,7 +877,9 @@ class _SupportTab extends StatelessWidget {
         children: [
           Text(
             'Support',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 6),
           Text(
@@ -793,7 +894,10 @@ class _SupportTab extends StatelessWidget {
                   icon: Icons.call_rounded,
                   label: 'Call',
                   response: '~2 min',
-                  onTap: () => _launch(context, Uri(scheme: 'tel', path: '+919000000000')),
+                  onTap: () => _launch(
+                    context,
+                    Uri(scheme: 'tel', path: '+919000000000'),
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
@@ -872,12 +976,14 @@ class _ActionChannelButtonState extends State<_ActionChannelButton> {
             curve: curve,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.cardFor(context),
               borderRadius: BorderRadius.circular(AppRadii.md),
               border: Border.all(color: AppColors.strokeFor(context)),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.deep.withValues(alpha: _pressed ? 0.11 : 0.05),
+                  color: AppColors.deep.withValues(
+                    alpha: _pressed ? 0.11 : 0.05,
+                  ),
                   blurRadius: _pressed ? 14 : 8,
                   offset: Offset(0, _pressed ? 9 : 5),
                 ),
@@ -920,8 +1026,18 @@ class _ProfileTabState extends State<_ProfileTab> {
   static const _localityKey = 'selected_locality';
   static const _addressKey = 'profile_default_address';
   static const _timeWindowKey = 'profile_time_window';
-  static const _areas = ['Perungudi', 'OMR', 'Velachery', 'Adyar', 'Thoraipakkam'];
-  static const _timeWindows = ['Morning (9-12)', 'Afternoon (12-4)', 'Evening (4-8)'];
+  static const _areas = [
+    'Perungudi',
+    'OMR',
+    'Velachery',
+    'Adyar',
+    'Thoraipakkam',
+  ];
+  static const _timeWindows = [
+    'Morning (9-12)',
+    'Afternoon (12-4)',
+    'Evening (4-8)',
+  ];
 
   String _locality = 'Perungudi';
   String _address = 'No default address';
@@ -956,7 +1072,11 @@ class _ProfileTabState extends State<_ProfileTab> {
                 leading: Icon(Icons.location_on_rounded, size: 22),
                 title: Text(area),
                 trailing: area == _locality
-                    ? Icon(Icons.check_circle_rounded, size: 22, color: AppColors.primary)
+                    ? Icon(
+                        Icons.check_circle_rounded,
+                        size: 22,
+                        color: AppColors.primary,
+                      )
                     : null,
                 onTap: () => Navigator.pop(context, area),
               ),
@@ -979,20 +1099,29 @@ class _ProfileTabState extends State<_ProfileTab> {
   }
 
   Future<void> _editAddress() async {
-    final controller = TextEditingController(text: _address == 'No default address' ? '' : _address);
+    final controller = TextEditingController(
+      text: _address == 'No default address' ? '' : _address,
+    );
     final value = await showModalBottomSheet<String>(
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
       builder: (_) => Padding(
-        padding: EdgeInsets.fromLTRB(16, 8, 16, MediaQuery.of(context).viewInsets.bottom + 16),
+        padding: EdgeInsets.fromLTRB(
+          16,
+          8,
+          16,
+          MediaQuery.of(context).viewInsets.bottom + 16,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: controller,
               maxLines: 3,
-              decoration: const InputDecoration(hintText: 'Enter default service address'),
+              decoration: const InputDecoration(
+                hintText: 'Enter default service address',
+              ),
             ),
             const SizedBox(height: 12),
             SizedBox(
@@ -1025,7 +1154,11 @@ class _ProfileTabState extends State<_ProfileTab> {
                 leading: Icon(Icons.schedule_rounded, size: 22),
                 title: Text(window),
                 trailing: window == _timeWindow
-                    ? Icon(Icons.check_circle_rounded, size: 22, color: AppColors.primary)
+                    ? Icon(
+                        Icons.check_circle_rounded,
+                        size: 22,
+                        color: AppColors.primary,
+                      )
                     : null,
                 onTap: () => Navigator.pop(context, window),
               ),
@@ -1049,7 +1182,9 @@ class _ProfileTabState extends State<_ProfileTab> {
     final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
     if (!mounted) return;
     if (!ok) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unable to open mail app')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Unable to open mail app')));
     }
   }
 
@@ -1058,17 +1193,87 @@ class _ProfileTabState extends State<_ProfileTab> {
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Logout?'),
-        content: const Text('You will need OTP login again to access bookings.'),
+        content: const Text(
+          'You will need OTP login again to access bookings.',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Logout')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Logout'),
+          ),
         ],
       ),
     );
     if (shouldLogout != true || !mounted) return;
     await Provider.of<AppProvider>(context, listen: false).logout();
     if (!mounted) return;
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+    );
+  }
+
+  void _showPrivacyTerms() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Legal & Trust'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Privacy Policy',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.ink,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'We value your privacy. Your personal data (name, phone, address) is stored locally on your device. We do not sell your data. Booking details are shared with our operations team only when you initiate a booking via WhatsApp.',
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Terms of Service',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.ink,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Fixmate is a beta platform connecting valid service requests with local providers. \n\n1. "Fixmate" is an MVP pilot.\n2. Service quality is monitored but not guaranteed.\n3. Payments are cash-on-completion.\n4. We reserve the right to cancel bookings in unavailable areas.',
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Contact Us',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.ink,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text('Email: support@fixmate.app\nPhone: +91 90000 00000'),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -1083,7 +1288,9 @@ class _ProfileTabState extends State<_ProfileTab> {
         final completed = bookings.where((b) => b.status == 'completed').length;
         final joined = total == 0
             ? DateTime.now()
-            : bookings.map((b) => b.createdAt).reduce((a, b) => a.isBefore(b) ? a : b);
+            : bookings
+                  .map((b) => b.createdAt)
+                  .reduce((a, b) => a.isBefore(b) ? a : b);
 
         return SafeArea(
           child: ListView(
@@ -1094,7 +1301,10 @@ class _ProfileTabState extends State<_ProfileTab> {
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(AppRadii.md),
-                    gradient: const LinearGradient(colors: [Color(0xFF0D1D46), Color(0xFF123A8D)]),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF304F83), Color(0xFF416DA9)],
+                    ),
+                    border: Border.all(color: const Color(0xFF7392C0)),
                     boxShadow: AppShadows.card(context),
                   ),
                   child: Column(
@@ -1113,25 +1323,42 @@ class _ProfileTabState extends State<_ProfileTab> {
                               children: [
                                 Text(
                                   u.name,
-                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
-                                Text(u.phoneNumber, style: TextStyle(color: Colors.white70)),
+                                Text(
+                                  u.phoneNumber,
+                                  style: TextStyle(color: Colors.white70),
+                                ),
                               ],
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.16),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Row(
                               children: [
-                                Icon(Icons.verified_rounded, color: Colors.white, size: 18),
+                                Icon(
+                                  Icons.verified_rounded,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
                                 SizedBox(width: 4),
                                 Text(
                                   'Verified',
-                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ],
                             ),
@@ -1143,24 +1370,38 @@ class _ProfileTabState extends State<_ProfileTab> {
                         children: [
                           AnimatedScale(
                             duration: AppMotion.maybe(AppMotion.fast, context),
-                            curve: AppMotion.maybeCurve(AppMotion.spring(context), context),
+                            curve: AppMotion.maybeCurve(
+                              AppMotion.spring(context),
+                              context,
+                            ),
                             scale: _chipPop ? 1.05 : 1,
                             child: InkWell(
                               onTap: _editLocality,
                               borderRadius: BorderRadius.circular(12),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withValues(alpha: 0.2),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Row(
                                   children: [
-                                    Icon(Icons.location_on_rounded, color: Colors.white, size: 20),
+                                    Icon(
+                                      Icons.location_on_rounded,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
                                     const SizedBox(width: 6),
                                     Text(
                                       _locality,
-                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 12,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -1234,19 +1475,6 @@ class _ProfileTabState extends State<_ProfileTab> {
               ),
               const SizedBox(height: 12),
               const AppReveal(
-                delayMs: 175,
-                child: _ProfileSectionTitle('Appearance'),
-              ),
-              const SizedBox(height: 8),
-              AppReveal(
-                delayMs: 190,
-                child: _ThemeModeCard(
-                  mode: p.themeMode,
-                  onChanged: (mode) => p.setThemeMode(mode),
-                ),
-              ),
-              const SizedBox(height: 12),
-              const AppReveal(
                 delayMs: 180,
                 child: _ProfileSectionTitle('Payments & Bills'),
               ),
@@ -1267,7 +1495,9 @@ class _ProfileTabState extends State<_ProfileTab> {
                   title: 'Invoices & History',
                   subtitle: 'Access past booking receipts',
                   onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Use My Bookings tab for invoice history')),
+                    const SnackBar(
+                      content: Text('Use My Bookings tab for invoice history'),
+                    ),
                   ),
                 ),
               ),
@@ -1284,7 +1514,9 @@ class _ProfileTabState extends State<_ProfileTab> {
                   title: 'Contact Support',
                   subtitle: 'Fast call/WhatsApp support',
                   onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Use Support tab for channels')),
+                    const SnackBar(
+                      content: Text('Use Support tab for channels'),
+                    ),
                   ),
                 ),
               ),
@@ -1294,7 +1526,7 @@ class _ProfileTabState extends State<_ProfileTab> {
                   icon: Icons.privacy_tip_rounded,
                   title: 'Privacy & Terms',
                   subtitle: 'Read privacy policy and terms',
-                  onTap: () {},
+                  onTap: _showPrivacyTerms,
                 ),
               ),
               const SizedBox(height: 12),
@@ -1336,7 +1568,9 @@ class _ProfileSectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+      style: Theme.of(
+        context,
+      ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
     );
   }
 }
@@ -1351,7 +1585,7 @@ class _ProfileStats extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardFor(context),
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: AppColors.strokeFor(context)),
       ),
@@ -1376,9 +1610,19 @@ class _StatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(value, style: TextStyle(fontWeight: FontWeight.w800, color: AppColors.ink)),
+        Text(
+          value,
+          style: TextStyle(fontWeight: FontWeight.w800, color: AppColors.ink),
+        ),
         const SizedBox(height: 2),
-        Text(label, style: TextStyle(fontSize: 11, color: AppColors.subtextFor(context), fontWeight: FontWeight.w600)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: AppColors.subtextFor(context),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }
@@ -1393,7 +1637,7 @@ class _InfoBulletCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardFor(context),
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: AppColors.strokeFor(context)),
       ),
@@ -1407,7 +1651,11 @@ class _InfoBulletCard extends StatelessWidget {
                   children: [
                     const Padding(
                       padding: EdgeInsets.only(top: 2),
-                      child: Icon(Icons.check_circle_rounded, color: AppColors.primary, size: 18),
+                      child: Icon(
+                        Icons.check_circle_rounded,
+                        color: AppColors.primary,
+                        size: 18,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(child: Text(line)),
@@ -1416,55 +1664,6 @@ class _InfoBulletCard extends StatelessWidget {
               ),
             )
             .toList(),
-      ),
-    );
-  }
-}
-
-class _ThemeModeCard extends StatelessWidget {
-  final ThemeMode mode;
-  final ValueChanged<ThemeMode> onChanged;
-
-  const _ThemeModeCard({required this.mode, required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.cardFor(context),
-        borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: AppColors.strokeFor(context)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Theme',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            children: [
-              ChoiceChip(
-                label: const Text('Light'),
-                selected: mode == ThemeMode.light,
-                onSelected: (_) => onChanged(ThemeMode.light),
-              ),
-              ChoiceChip(
-                label: const Text('Dark'),
-                selected: mode == ThemeMode.dark,
-                onSelected: (_) => onChanged(ThemeMode.dark),
-              ),
-              ChoiceChip(
-                label: const Text('System'),
-                selected: mode == ThemeMode.system,
-                onSelected: (_) => onChanged(ThemeMode.system),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
@@ -1509,12 +1708,14 @@ class _ProfileActionTileState extends State<_ProfileActionTile> {
             margin: const EdgeInsets.only(bottom: 10),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.cardFor(context),
               borderRadius: BorderRadius.circular(AppRadii.md),
               border: Border.all(color: AppColors.strokeFor(context)),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.deep.withValues(alpha: _pressed ? 0.10 : 0.05),
+                  color: AppColors.deep.withValues(
+                    alpha: _pressed ? 0.10 : 0.05,
+                  ),
                   blurRadius: _pressed ? 14 : 8,
                   offset: Offset(0, _pressed ? 9 : 5),
                 ),
@@ -1536,18 +1737,28 @@ class _ProfileActionTileState extends State<_ProfileActionTile> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.title, style: TextStyle(fontWeight: FontWeight.w700)),
+                      Text(
+                        widget.title,
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
                       const SizedBox(height: 2),
                       Text(
                         widget.subtitle,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: AppColors.subtextFor(context), fontSize: 12),
+                        style: TextStyle(
+                          color: AppColors.subtextFor(context),
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                Icon(Icons.chevron_right_rounded, size: 22, color: AppColors.subtextFor(context)),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  size: 22,
+                  color: AppColors.subtextFor(context),
+                ),
               ],
             ),
           ),

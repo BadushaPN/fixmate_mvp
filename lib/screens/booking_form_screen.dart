@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/address_model.dart';
+import '../models/booking_model.dart';
 import '../models/service_model.dart';
 import '../providers/app_provider.dart';
 import '../theme/app_motion.dart';
@@ -81,8 +83,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(AppRadii.md),
                         gradient: const LinearGradient(
-                          colors: [Color(0xFF0E5BFF), Color(0xFF17C7A5)],
+                          colors: [Color(0xFF2D5DA8), Color(0xFF4F8D87)],
                         ),
+                        border: Border.all(color: const Color(0xFF7195C6)),
                         boxShadow: AppShadows.card(context),
                       ),
                       child: Row(
@@ -94,7 +97,11 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                               color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(14),
                             ),
-                            child: Icon(serviceIcon, color: Colors.white, size: 22),
+                            child: Icon(
+                              serviceIcon,
+                              color: Colors.white,
+                              size: 22,
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Column(
@@ -102,15 +109,18 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                             children: [
                               Text(
                                 widget.service.name,
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800,
-                                ),
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w800,
+                                    ),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 'Starting from INR $servicePrice',
-                                style: TextStyle(color: Colors.white.withValues(alpha: 0.92)),
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.92),
+                                ),
                               ),
                             ],
                           ),
@@ -125,7 +135,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                     delayMs: 60,
                     child: Text(
                       'Select Date',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -136,11 +148,16 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                       borderRadius: BorderRadius.circular(AppRadii.md),
                       child: Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 14,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.cardFor(context),
                           borderRadius: BorderRadius.circular(AppRadii.md),
-                          border: Border.all(color: AppColors.strokeFor(context)),
+                          border: Border.all(
+                            color: AppColors.strokeFor(context),
+                          ),
                           boxShadow: AppShadows.card(context),
                         ),
                         child: Row(
@@ -149,7 +166,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                             Text(
                               _selectedDate == null
                                   ? 'Choose date'
-                                  : DateFormat('EEE, MMM d, yyyy').format(_selectedDate!),
+                                  : DateFormat(
+                                      'EEE, MMM d, yyyy',
+                                    ).format(_selectedDate!),
                             ),
                             const Icon(Icons.calendar_today_rounded, size: 22),
                           ],
@@ -162,7 +181,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                     delayMs: 100,
                     child: Text(
                       'Select Time Slot',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -175,12 +196,16 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                         final selectedSlot = _selectedTimeSlot == slot;
                         return AnimatedScale(
                           duration: duration,
-                          curve: AppMotion.maybeCurve(AppMotion.spring(context), context),
+                          curve: AppMotion.maybeCurve(
+                            AppMotion.spring(context),
+                            context,
+                          ),
                           scale: selectedSlot ? 1.03 : 1,
                           child: ChoiceChip(
                             label: Text(slot),
                             selected: selectedSlot,
-                            onSelected: (_) => setState(() => _selectedTimeSlot = slot),
+                            onSelected: (_) =>
+                                setState(() => _selectedTimeSlot = slot),
                             showCheckmark: false,
                             selectedColor: AppColors.softBlueFor(context),
                           ),
@@ -193,7 +218,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                     delayMs: 140,
                     child: Text(
                       'Select Address',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -206,7 +233,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                         borderRadius: BorderRadius.circular(AppRadii.md),
                         border: Border.all(color: AppColors.strokeFor(context)),
                       ),
-                      child: const Text('No address available yet. Add a new address.'),
+                      child: const Text(
+                        'No address available yet. Add a new address.',
+                      ),
                     )
                   else
                     ...addresses.map(
@@ -231,8 +260,15 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                                 ? AppColors.primary
                                 : AppColors.subtextFor(context),
                           ),
-                          title: Text(a.label, style: const TextStyle(fontWeight: FontWeight.w700)),
-                          subtitle: Text(a.addressLine, maxLines: 2, overflow: TextOverflow.ellipsis),
+                          title: Text(
+                            a.label,
+                            style: const TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                          subtitle: Text(
+                            a.addressLine,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
                     ),
@@ -267,7 +303,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                     delayMs: 180,
                     child: Text(
                       'Add Reference Images',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -305,7 +343,8 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        separatorBuilder: (context, index) => const SizedBox(width: 8),
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(width: 8),
                         itemCount: _savedImagePaths.length,
                       ),
                     ),
@@ -313,7 +352,11 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                   const SizedBox(height: 20),
                   Text(
                     'Cash due on completion. No online prepayment in MVP.',
-                    style: TextStyle(color: AppColors.subtextFor(context), fontWeight: FontWeight.w600, fontSize: 12),
+                    style: TextStyle(
+                      color: AppColors.subtextFor(context),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   AppReveal(
@@ -325,7 +368,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: _isBooking ? null : () => _confirmBooking(servicePrice),
+                          onPressed: _isBooking
+                              ? null
+                              : () => _confirmBooking(servicePrice),
                           child: const Text('Confirm Booking'),
                         ),
                       ),
@@ -341,7 +386,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                 ignoring: !_isBooking,
                 child: ColoredBox(
                   color: Colors.black.withValues(alpha: 0.2),
-                  child: const Center(child: CircularProgressIndicator(strokeWidth: 2.6)),
+                  child: const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2.6),
+                  ),
                 ),
               ),
             ),
@@ -403,13 +450,20 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
       isScrollControlled: true,
       showDragHandle: true,
       builder: (_) => Padding(
-        padding: EdgeInsets.fromLTRB(16, 8, 16, MediaQuery.of(context).viewInsets.bottom + 16),
+        padding: EdgeInsets.fromLTRB(
+          16,
+          8,
+          16,
+          MediaQuery.of(context).viewInsets.bottom + 16,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: labelController,
-              decoration: const InputDecoration(hintText: 'Label (Home, Office, etc.)'),
+              decoration: const InputDecoration(
+                hintText: 'Label (Home, Office, etc.)',
+              ),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -420,12 +474,16 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
             const SizedBox(height: 8),
             TextField(
               controller: receiverNameController,
-              decoration: const InputDecoration(hintText: 'Receiver name (optional)'),
+              decoration: const InputDecoration(
+                hintText: 'Receiver name (optional)',
+              ),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: receiverPhoneController,
-              decoration: const InputDecoration(hintText: 'Receiver phone (optional)'),
+              decoration: const InputDecoration(
+                hintText: 'Receiver phone (optional)',
+              ),
             ),
             const SizedBox(height: 12),
             SizedBox(
@@ -466,7 +524,9 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
   }
 
   Future<void> _confirmBooking(int servicePrice) async {
-    if (_selectedDate == null || _selectedTimeSlot == null || _selectedAddress == null) {
+    if (_selectedDate == null ||
+        _selectedTimeSlot == null ||
+        _selectedAddress == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select date, slot and address')),
       );
@@ -482,7 +542,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
     if (mounted) setState(() => _buttonPressed = false);
 
     try {
-      await app.createBooking(
+      final booking = await app.createBooking(
         service: widget.service,
         date: _selectedDate!,
         timeSlot: _selectedTimeSlot!,
@@ -491,29 +551,34 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
         receiverName: _selectedAddress!.isCurrentLocation
             ? null
             : (_receiverName.text.trim().isEmpty
-                ? _selectedAddress!.receiverName
-                : _receiverName.text.trim()),
+                  ? _selectedAddress!.receiverName
+                  : _receiverName.text.trim()),
         receiverPhone: _selectedAddress!.isCurrentLocation
             ? null
             : (_receiverPhone.text.trim().isEmpty
-                ? _selectedAddress!.receiverPhone
-                : _receiverPhone.text.trim()),
+                  ? _selectedAddress!.receiverPhone
+                  : _receiverPhone.text.trim()),
         imagePaths: _savedImagePaths,
       );
+
       if (!mounted) return;
-      await _showSuccessDialog();
+      if (booking != null) {
+        await _showSuccessDialog(booking);
+      } else {
+        throw Exception('Booking creation failed');
+      }
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to book service')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Failed to book service')));
       }
     } finally {
       if (mounted) setState(() => _isBooking = false);
     }
   }
 
-  Future<void> _showSuccessDialog() async {
+  Future<void> _showSuccessDialog(BookingModel booking) async {
     await showGeneralDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -523,23 +588,89 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
       pageBuilder: (dialogContext, animation, secondaryAnimation) {
         return Center(
           child: Material(
-            color: Colors.white,
+            color: AppColors.cardFor(context),
             borderRadius: BorderRadius.circular(AppRadii.md),
             child: Container(
               width: 320,
-              padding: const EdgeInsets.all(18),
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppRadii.md),
+                border: Border.all(color: AppColors.strokeFor(context)),
+              ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Booking Confirmed', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20)),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Your request is placed. Provider assignment is manual for this MVP, so live tracking is not available yet.',
+                  const Icon(
+                    Icons.check_circle_rounded,
+                    color: Color(0xFF2F8A59),
+                    size: 48,
                   ),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Booking Request Sent!',
+                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'We have received your request. Our manager will call you within 15 minutes to confirm details and assign a pro.',
+                    style: TextStyle(height: 1.4, color: AppColors.ink),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.circular(AppRadii.sm),
+                      border: Border.all(color: AppColors.strokeFor(context)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Next Steps:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 12,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        _StepRow(
+                          icon: Icons.call_rounded,
+                          text: 'Manager confirmation call',
+                        ),
+                        const SizedBox(height: 4),
+                        _StepRow(
+                          icon: Icons.person_rounded,
+                          text: 'Provider assigned',
+                        ),
+                        const SizedBox(height: 4),
+                        _StepRow(
+                          icon: Icons.currency_rupee_rounded,
+                          text: 'Pay cash after service',
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () => _sendToManager(booking),
+                      icon: const Icon(
+                        Icons.chat_bubble_outline_rounded,
+                        size: 20,
+                      ),
+                      label: const Text('Send to Manager (WhatsApp)'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF2C9E68),
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   Align(
-                    alignment: Alignment.centerRight,
+                    alignment: Alignment.center,
                     child: TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -559,12 +690,71 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
           parent: animation,
           curve: AppMotion.maybeCurve(AppMotion.spring(context), context),
         );
-        final slide = Tween<Offset>(begin: const Offset(0, 0.04), end: Offset.zero).animate(curved);
+        final slide = Tween<Offset>(
+          begin: const Offset(0, 0.04),
+          end: Offset.zero,
+        ).animate(curved);
         return FadeTransition(
           opacity: curved,
-          child: SlideTransition(position: slide, child: ScaleTransition(scale: curved, child: child)),
+          child: SlideTransition(
+            position: slide,
+            child: ScaleTransition(scale: curved, child: child),
+          ),
         );
       },
+    );
+  }
+
+  Future<void> _sendToManager(BookingModel booking) async {
+    // Replace with your actual manager number
+    const managerPhone = '919000000000';
+    final message =
+        'Hello Fixmate! I just booked a service.\n\n'
+        '*Service:* ${booking.serviceName}\n'
+        '*Date:* ${DateFormat('MMM dd').format(booking.date)}\n'
+        '*Slot:* ${booking.timeSlot}\n'
+        '*Address:* ${booking.addressLine}\n'
+        '*Est. Price:* INR ${booking.price}\n\n'
+        'Please confirm my booking.';
+
+    final uri = Uri.parse(
+      'https://wa.me/$managerPhone?text=${Uri.encodeComponent(message)}',
+    );
+
+    // Attempt standard launch first
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open WhatsApp')),
+        );
+      }
+    }
+  }
+}
+
+class _StepRow extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  const _StepRow({required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: 14, color: AppColors.subtextFor(context)),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 12,
+              color: AppColors.subtextFor(context),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -578,9 +768,9 @@ class _CashNote extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF2ED),
+        color: const Color(0xFFFFF7F3),
         borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: const Color(0xFFFFDCCD)),
+        border: Border.all(color: const Color(0xFFEAD5CA)),
       ),
       child: const Row(
         children: [
@@ -589,7 +779,10 @@ class _CashNote extends StatelessWidget {
           Expanded(
             child: Text(
               'MVP Payment Mode: Cash on Service',
-              style: TextStyle(color: AppColors.ink, fontWeight: FontWeight.w700),
+              style: TextStyle(
+                color: AppColors.ink,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ],

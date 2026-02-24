@@ -28,7 +28,7 @@ class BookingItem extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardFor(context),
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: AppColors.strokeFor(context)),
         boxShadow: AppShadows.card(context),

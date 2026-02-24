@@ -93,10 +93,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Spacer(),
                 AppReveal(
                   delayMs: 120,
-                  child: Container(
+                    child: Container(
                     padding: const EdgeInsets.all(18),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: AppColors.cardFor(context),
                       borderRadius: BorderRadius.circular(AppRadii.md),
                       border: Border.all(color: AppColors.strokeFor(context)),
                       boxShadow: AppShadows.card(context),
