@@ -85,7 +85,6 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                         gradient: const LinearGradient(
                           colors: [Color(0xFF2D5DA8), Color(0xFF4F8D87)],
                         ),
-                        border: Border.all(color: const Color(0xFF7195C6)),
                         boxShadow: AppShadows.card(context),
                       ),
                       child: Row(
@@ -155,9 +154,6 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                         decoration: BoxDecoration(
                           color: AppColors.cardFor(context),
                           borderRadius: BorderRadius.circular(AppRadii.md),
-                          border: Border.all(
-                            color: AppColors.strokeFor(context),
-                          ),
                           boxShadow: AppShadows.card(context),
                         ),
                         child: Row(
@@ -231,7 +227,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                       decoration: BoxDecoration(
                         color: AppColors.cardFor(context),
                         borderRadius: BorderRadius.circular(AppRadii.md),
-                        border: Border.all(color: AppColors.strokeFor(context)),
+                        boxShadow: AppShadows.card(context),
                       ),
                       child: const Text(
                         'No address available yet. Add a new address.',
@@ -242,13 +238,29 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                       (a) => Container(
                         margin: const EdgeInsets.only(bottom: 8),
                         decoration: BoxDecoration(
-                          color: AppColors.cardFor(context),
+                          color: _selectedAddress?.id == a.id
+                              ? AppColors.softBlueFor(context).withValues(
+                                  alpha: 0.72,
+                                )
+                              : AppColors.cardFor(context),
                           borderRadius: BorderRadius.circular(AppRadii.md),
-                          border: Border.all(
-                            color: _selectedAddress?.id == a.id
-                                ? AppColors.primary
-                                : AppColors.strokeFor(context),
-                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: (_selectedAddress?.id == a.id
+                                      ? AppColors.primary
+                                      : AppColors.deep)
+                                  .withValues(
+                                    alpha: _selectedAddress?.id == a.id
+                                        ? 0.18
+                                        : 0.06,
+                                  ),
+                              blurRadius: _selectedAddress?.id == a.id ? 16 : 8,
+                              offset: Offset(
+                                0,
+                                _selectedAddress?.id == a.id ? 8 : 4,
+                              ),
+                            ),
+                          ],
                         ),
                         child: ListTile(
                           onTap: () => setState(() => _selectedAddress = a),
@@ -595,7 +607,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(AppRadii.md),
-                border: Border.all(color: AppColors.strokeFor(context)),
+                boxShadow: AppShadows.card(context),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -622,7 +634,13 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                     decoration: BoxDecoration(
                       color: AppColors.surface,
                       borderRadius: BorderRadius.circular(AppRadii.sm),
-                      border: Border.all(color: AppColors.strokeFor(context)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.deep.withValues(alpha: 0.06),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -770,7 +788,13 @@ class _CashNote extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFFFF7F3),
         borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: const Color(0xFFEAD5CA)),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFE08163).withValues(alpha: 0.16),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: const Row(
         children: [

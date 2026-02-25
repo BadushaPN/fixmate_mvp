@@ -31,8 +31,14 @@ class OfferCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        border: Border.all(color: AppColors.strokeFor(context)),
-        boxShadow: AppShadows.card(context),
+        boxShadow: [
+          ...AppShadows.card(context),
+          BoxShadow(
+            color: color.withValues(alpha: 0.10),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Material(
         color: Colors.transparent,
@@ -83,7 +89,13 @@ class OfferCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: AppColors.deep,
                       borderRadius: BorderRadius.circular(AppRadii.md),
-                      border: Border.all(color: AppColors.strokeFor(context)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.deep.withValues(alpha: 0.20),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Text(
                       buttonText,

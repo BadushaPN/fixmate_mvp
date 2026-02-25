@@ -30,7 +30,6 @@ class BookingItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.cardFor(context),
         borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: AppColors.strokeFor(context)),
         boxShadow: AppShadows.card(context),
       ),
       child: Column(

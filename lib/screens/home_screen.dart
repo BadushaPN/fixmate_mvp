@@ -272,7 +272,6 @@ class _BottomBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.cardFor(context),
         borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: AppColors.strokeFor(context)),
         boxShadow: AppShadows.card(context),
       ),
       child: LayoutBuilder(
@@ -543,7 +542,6 @@ class _Hero extends StatelessWidget {
             gradient: const LinearGradient(
               colors: [Color(0xFF2D5DA8), Color(0xFF4F8D87)],
             ),
-            border: Border.all(color: const Color(0xFF7195C6)),
             boxShadow: AppShadows.card(context),
           ),
           child: Stack(
@@ -651,7 +649,7 @@ class _RecentStrip extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.cardFor(context),
         borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: AppColors.strokeFor(context)),
+        boxShadow: AppShadows.card(context),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -978,7 +976,6 @@ class _ActionChannelButtonState extends State<_ActionChannelButton> {
             decoration: BoxDecoration(
               color: AppColors.cardFor(context),
               borderRadius: BorderRadius.circular(AppRadii.md),
-              border: Border.all(color: AppColors.strokeFor(context)),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.deep.withValues(
@@ -1304,7 +1301,6 @@ class _ProfileTabState extends State<_ProfileTab> {
                     gradient: const LinearGradient(
                       colors: [Color(0xFF304F83), Color(0xFF416DA9)],
                     ),
-                    border: Border.all(color: const Color(0xFF7392C0)),
                     boxShadow: AppShadows.card(context),
                   ),
                   child: Column(
@@ -1587,7 +1583,7 @@ class _ProfileStats extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.cardFor(context),
         borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: AppColors.strokeFor(context)),
+        boxShadow: AppShadows.card(context),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -1639,7 +1635,7 @@ class _InfoBulletCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.cardFor(context),
         borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: AppColors.strokeFor(context)),
+        boxShadow: AppShadows.card(context),
       ),
       child: Column(
         children: bullets
@@ -1710,7 +1706,6 @@ class _ProfileActionTileState extends State<_ProfileActionTile> {
             decoration: BoxDecoration(
               color: AppColors.cardFor(context),
               borderRadius: BorderRadius.circular(AppRadii.md),
-              border: Border.all(color: AppColors.strokeFor(context)),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.deep.withValues(

@@ -76,7 +76,6 @@ class _ServiceCardState extends State<ServiceCard> {
       decoration: BoxDecoration(
         color: AppColors.cardFor(context),
         borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: AppColors.strokeFor(context)),
         boxShadow: [
           BoxShadow(
             color: AppColors.deep.withValues(alpha: _pressed ? 0.14 : 0.08),
@@ -148,9 +147,22 @@ class _ServiceCardState extends State<ServiceCard> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: AppColors.softBlueFor(context),
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.softBlueFor(context),
+                    AppColors.softBlueFor(context).withValues(alpha: 0.82),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.strokeFor(context)),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.10),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
               child: Text(
                 'Next: ${ServiceMeta.nextAvailableSlot(widget.service)}',
