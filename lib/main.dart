@@ -1,20 +1,22 @@
-
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'providers/app_provider.dart';
-import 'screens/splash_screen.dart';
-import 'theme/app_motion.dart';
-import 'theme/app_theme.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'firebase_options.dart';
+import 'core/routes/app_pages.dart';
+import 'core/routes/app_routes.dart';
+import 'initial_binding.dart';
 
-void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AppProvider()),
-      ],
-      child: const FixmateApp(),
-    ),
-  );
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Storage
+  await GetStorage.init();
+
+  // Initialize Firebase
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  runApp(const FixmateApp());
 }
 
 class FixmateApp extends StatelessWidget {
@@ -22,37 +24,13 @@ class FixmateApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppProvider>(
-      builder: (context, app, _) => MaterialApp(
-        title: 'Fixmate',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light(context),
-        darkTheme: AppTheme.dark(context),
-        themeMode: app.themeMode,
-        onGenerateRoute: (settings) {
-          if (settings.name == Navigator.defaultRouteName) {
-            return PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => const SplashScreen(),
-              transitionDuration: AppMotion.maybe(AppMotion.normal, context),
-              reverseTransitionDuration: AppMotion.maybe(AppMotion.normal, context),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                final curve = AppMotion.maybeCurve(AppMotion.standard(context), context);
-                final fade = CurvedAnimation(parent: animation, curve: curve);
-                final slide = Tween<Offset>(
-                  begin: const Offset(0, 0.04),
-                  end: Offset.zero,
-                ).animate(fade);
-                return FadeTransition(
-                  opacity: fade,
-                  child: SlideTransition(position: slide, child: child),
-                );
-              },
-            );
-          }
-          return null;
-        },
-        home: const SplashScreen(),
-      ),
+    return GetMaterialApp(
+      title: 'Fixmate',
+      debugShowCheckedModeBanner: false,
+      initialRoute: AppRoutes.splash,
+      getPages: AppPages.pages,
+      initialBinding: InitialBinding(),
+      theme: ThemeData(useMaterial3: true, primarySwatch: Colors.blue),
     );
   }
 }

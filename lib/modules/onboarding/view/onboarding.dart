@@ -137,7 +137,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     color: AppColors.brandSecondary,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.brandSecondary.withOpacity(0.4),
+                        color: AppColors.brandSecondary.withValues(alpha: 0.4),
                         blurRadius: 12,
                         spreadRadius: 1,
                       ),

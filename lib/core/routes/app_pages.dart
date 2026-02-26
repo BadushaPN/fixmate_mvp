@@ -10,8 +10,8 @@ import 'package:fixmate/modules/onboarding/view/onboarding.dart';
 import 'package:fixmate/modules/request/binding.dart';
 import 'package:fixmate/modules/request/view/request_active_page.dart';
 import 'package:get/get.dart';
-import '../../modules/splash/view/splash_screen.dart';
-import '../../modules/splash/binding.dart';
+import 'package:fixmate/modules/splash/view/splash_screen.dart';
+import 'package:fixmate/modules/splash/binding.dart';
 
 class AppPages {
   static final pages = [

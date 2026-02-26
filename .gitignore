@@ -19,6 +19,7 @@ build/
 ios/Pods/
 android/.gradle/
 android/app/build/
+.agent/
 
 
 # IntelliJ related

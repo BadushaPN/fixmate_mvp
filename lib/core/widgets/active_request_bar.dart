@@ -26,7 +26,10 @@ class ActiveRequestBar extends StatelessWidget {
               color: Colors.orange,
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  blurRadius: 6,
+                ),
               ],
             ),
             child: Row(

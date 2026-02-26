@@ -32,7 +32,7 @@ class HomeTile extends StatelessWidget {
           boxShadow: enabled
               ? [
                   BoxShadow(
-                    color: AppColors.shadowSoft.withOpacity(0.08),
+                    color: AppColors.shadowSoft.withValues(alpha: 0.08),
                     blurRadius: 8,
                   ),
                 ]

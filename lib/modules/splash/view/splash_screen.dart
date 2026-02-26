@@ -99,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen>
                         gradient: LinearGradient(
                           colors: [
                             AppColors.myWhite,
-                            AppColors.myWhite.withOpacity(0.0),
+                            AppColors.myWhite.withValues(alpha: 0.0),
                           ],
                         ),
                       ),
