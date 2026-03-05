@@ -179,56 +179,53 @@ class _ServiceCardState extends State<ServiceCard> {
       ),
     );
 
-    // return SizedBox(
-    //   width: 170,
-    //   child: LayoutBuilder(
-    //     builder: (context, constraints) {
-    //       return Listener(
-    //         onPointerDown: (event) {
-    //           setState(() => _pressed = true);
-    //           if (!reduce) {
-    //             _updateTilt(event.localPosition, constraints.biggest);
-    //           }
-    //         },
-    //         onPointerMove: (event) {
-    //           if (!reduce) {
-    //             _updateTilt(event.localPosition, constraints.biggest);
-    //           }
-    //         },
-    //         onPointerUp: (_) => _resetTilt(),
-    //         onPointerCancel: (_) => _resetTilt(),
-    //         child: InkWell(
-    //           borderRadius: BorderRadius.circular(AppRadii.md),
-    //           onTap: widget.onTap,
-    //           child: AnimatedScale(
-    //             duration: duration,
-    //             curve: curve,
-    //             scale: _pressed ? 0.97 : 1,
-    //             child: TweenAnimationBuilder<double>(
-    //               duration: duration,
-    //               curve: curve,
-    //               tween: Tween<double>(
-    //                 begin: 0,
-    //                 end: reduce ? 0 : 1,
-    //               ),
-    //               builder: (context, value, child) {
-    //                 final matrix = Matrix4.identity()
-    //                   ..setEntry(3, 2, 0.001)
-    //                   ..rotateX(_rx * value)
-    //                   ..rotateY(_ry * value);
-    //                 return Transform(
-    //                   alignment: Alignment.center,
-    //                   transform: matrix,
-    //                   child: child,
-    //                 );
-    //               },
-    //               child: card,
-    //             ),
-    //           ),
-    //         ),
-    //       );
-    //     },
-    //   ),
-    // );
+    return SizedBox(
+      width: 170,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Listener(
+            onPointerDown: (event) {
+              setState(() => _pressed = true);
+              if (!reduce) {
+                _updateTilt(event.localPosition, constraints.biggest);
+              }
+            },
+            onPointerMove: (event) {
+              if (!reduce) {
+                _updateTilt(event.localPosition, constraints.biggest);
+              }
+            },
+            onPointerUp: (_) => _resetTilt(),
+            onPointerCancel: (_) => _resetTilt(),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(AppRadii.md),
+              onTap: widget.onTap,
+              child: AnimatedScale(
+                duration: duration,
+                curve: curve,
+                scale: _pressed ? 0.97 : 1,
+                child: TweenAnimationBuilder<double>(
+                  duration: duration,
+                  curve: curve,
+                  tween: Tween<double>(begin: 0, end: reduce ? 0 : 1),
+                  builder: (context, value, child) {
+                    final matrix = Matrix4.identity()
+                      ..setEntry(3, 2, 0.001)
+                      ..rotateX(_rx * value)
+                      ..rotateY(_ry * value);
+                    return Transform(
+                      alignment: Alignment.center,
+                      transform: matrix,
+                      child: child,
+                    );
+                  },
+                  child: card,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
